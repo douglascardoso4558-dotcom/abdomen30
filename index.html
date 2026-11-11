@@ -1,0 +1,151 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Abdômen em 30 dias</title>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@600;700;800&family=Barlow:wght@400;500;600&display=swap">
+<style>
+:root{--bg:#F1F3F6;--surface:#FFFFFF;--ink:#14202B;--muted:#5F6B78;--line:#D5DAE1;--accent:#2447F5;--on-accent:#FFFFFF;--done:#16945F;--rest:#7A5AF8;
+box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px);color-scheme:light}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){--bg:#0E151C;--surface:#17212B;--ink:#EAF0F6;--muted:#9AA7B5;--line:#2A3846;--accent:#6C86FF;--on-accent:#0E151C;--done:#3CCB8B;--rest:#A592FF;color-scheme:dark}}
+:root[data-theme="dark"]{--bg:#0E151C;--surface:#17212B;--ink:#EAF0F6;--muted:#9AA7B5;--line:#2A3846;--accent:#6C86FF;--on-accent:#0E151C;--done:#3CCB8B;--rest:#A592FF;color-scheme:dark}
+html{scroll-padding-top:env(safe-area-inset-top,0px)}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--ink);font:400 16px/1.5 "Barlow",system-ui,-apple-system,"Segoe UI",sans-serif}
+main{max-width:640px;margin:0 auto;padding:20px 16px 48px}
+h1,h2,h3{font-family:"Barlow Condensed","Arial Narrow",Impact,sans-serif;margin:0;line-height:1.05}
+h1{font-size:clamp(44px,13vw,72px);font-weight:800;letter-spacing:-.5px}
+h2{font-size:28px;font-weight:700}
+.sub{color:var(--muted);margin:8px 0 20px;max-width:46ch}
+.prog{background:var(--surface);border:1px solid var(--line);border-radius:14px;padding:14px 16px;margin-bottom:16px}
+.prog b{font:700 22px "Barlow Condensed",sans-serif}
+.bar{height:8px;background:var(--line);border-radius:99px;margin-top:8px;overflow:hidden}
+.bar i{display:block;height:100%;width:0;background:var(--done);transition:width .3s}
+.grid{display:grid;grid-template-columns:repeat(6,1fr);gap:8px;margin-bottom:20px}
+.d{aspect-ratio:1;border-radius:12px;border:1.5px solid var(--line);background:var(--surface);color:var(--ink);font:700 20px "Barlow Condensed",sans-serif;cursor:pointer;position:relative}
+.d.rest{border-style:dashed;border-color:var(--rest)}
+.d.done{background:var(--done);border-color:var(--done);color:#fff}
+.d.sel{outline:3px solid var(--accent);outline-offset:2px}
+.d:focus-visible,button:focus-visible{outline:3px solid var(--accent);outline-offset:2px}
+.legend{display:flex;gap:14px;flex-wrap:wrap;font-size:13px;color:var(--muted);margin:-8px 0 20px}
+.panel{background:var(--surface);border:1px solid var(--line);border-radius:16px;padding:20px 18px}
+.tag{color:var(--muted);font-size:14px;margin:4px 0 14px}
+ul.ex{list-style:none;margin:0 0 18px;padding:0}
+ul.ex li{display:flex;justify-content:space-between;gap:12px;padding:12px 0;border-top:1px solid var(--line)}
+ul.ex li:first-child{border-top:0}
+ul.ex strong{font-weight:600}
+ul.ex span.q{font:700 20px "Barlow Condensed",sans-serif;white-space:nowrap;color:var(--accent)}
+ul.ex small{display:block;color:var(--muted);font-size:13px}
+.btn{width:100%;min-height:52px;border:0;border-radius:12px;background:var(--accent);color:var(--on-accent);font:700 22px "Barlow Condensed",sans-serif;cursor:pointer}
+.btn.undo{background:transparent;color:var(--ink);border:1.5px solid var(--line)}
+.tips{margin-top:28px}
+.tips h2{margin-bottom:10px}
+.tips details{border-top:1px solid var(--line);padding:12px 0}
+.tips summary{font-weight:600;cursor:pointer}
+.tips p{margin:8px 0 0;color:var(--muted);max-width:60ch}
+.note{margin-top:20px;font-size:13px;color:var(--muted)}
+.reset{background:none;border:0;color:var(--muted);text-decoration:underline;cursor:pointer;font:inherit;font-size:13px;padding:8px 0}
+@media (prefers-reduced-motion:reduce){.bar i{transition:none}}
+</style>
+</head>
+<body>
+<main>
+<h1>Abdômen em 30 dias</h1>
+<p class="sub">Um treino curto por dia, sem equipamento, que fica mais difícil a cada semana. Toque num dia, treine e marque como feito.</p>
+
+<div class="prog"><div><b id="cnt">0 de 30 dias</b> <span id="wk" style="color:var(--muted)"></span></div><div class="bar"><i id="fill"></i></div></div>
+
+<div class="grid" id="grid" role="group" aria-label="Dias do desafio"></div>
+<div class="legend"><span>Tracejado: descanso ativo</span><span>Verde: concluído</span></div>
+
+<section class="panel" id="panel" aria-live="polite"></section>
+
+<section class="tips">
+<h2>O que faz o abdômen aparecer</h2>
+<details open><summary>Gordura corporal manda mais que abdominais</summary><p>O “tanquinho” existe em todo mundo; ele aparece quando a gordura sobre a barriga diminui. Em 30 dias dá para fortalecer o abdômen e melhorar a definição, mas o quanto aparece depende do seu ponto de partida. Não dá para queimar gordura só da barriga com exercício localizado.</p></details>
+<details><summary>Alimentação</summary><p>Um pequeno déficit calórico, proteína em todas as refeições (ovos, frango, peixe, feijão, iogurte), mais comida de verdade e menos ultraprocessados, refrigerante e álcool. Cortes radicais costumam falhar.</p></details>
+<details><summary>Sono e água</summary><p>Dormir 7 a 9 horas ajuda na recuperação e no controle da fome. Beba água ao longo do dia.</p></details>
+<details><summary>Caminhada ajuda</summary><p>Caminhar 30 a 40 minutos nos dias de descanso e, se puder, nos dias de treino aumenta o gasto de calorias sem sobrecarregar.</p></details>
+<p class="note">Pare se sentir dor nas costas, no pescoço ou desconforto estranho. Se tem lesão, hérnia, está grávida ou pós-parto, ou tem alguma condição de saúde, converse com um médico antes de começar.</p>
+</section>
+<button class="reset" id="reset">Recomeçar desafio</button>
+</main>
+
+<script>
+var EX={
+ prancha:{n:"Prancha",t:"s",b:20,h:"Cotovelos sob os ombros, corpo reto, barriga firme."},
+ supra:{n:"Abdominal supra",t:"r",b:12,h:"Suba só as costelas, sem puxar o pescoço."},
+ pernas:{n:"Elevação de pernas",t:"r",b:8,h:"Deitado, pernas retas, lombar colada no chão."},
+ bike:{n:"Bicicleta no ar",t:"r",b:14,h:"Cotovelo vai ao joelho oposto, devagar. Conte os dois lados."},
+ esc:{n:"Escalador",t:"s",b:20,h:"Em posição de flexão, traga os joelhos ao peito alternando."},
+ lat:{n:"Prancha lateral",t:"s",b:15,h:"Por lado. Quadril alto, corpo em linha."},
+ tes:{n:"Tesoura",t:"r",b:12,h:"Pernas esticadas cruzando uma sobre a outra, perto do chão."},
+ dead:{n:"Dead bug",t:"r",b:8,h:"Por lado. Braço e perna opostos descem, lombar no chão."},
+ rus:{n:"Giro russo",t:"r",b:14,h:"Sentado, tronco inclinado, gire de um lado ao outro."},
+ vup:{n:"V-up",t:"r",b:6,h:"Mãos e pés se encontram no alto. Versão fácil: joelhos dobrados."},
+ rev:{n:"Abdominal infra",t:"r",b:10,h:"Traga os joelhos ao peito e suba o quadril do chão."}
+};
+var ROUT=[
+ {n:"Treino A: Base",l:["prancha","supra","pernas","bike"]},
+ {n:"Treino B: Oblíquos e estabilidade",l:["esc","lat","tes","dead"]},
+ {n:"Treino C: Força",l:["rus","vup","prancha","rev"]}
+];
+var DAYS=[];
+(function(){var k=0;for(var d=1;d<=30;d++){var w=Math.min(4,Math.ceil(d/7));if(d%7===0&&d<30){DAYS.push({d:d,w:w,rest:true})}else{DAYS.push({d:d,w:w,rest:false,r:ROUT[k%3]});k++}}})();
+var SETS=[0,2,3,3,4];
+var KEY="abd30:done",done=[],sel=1;
+try{var s=localStorage.getItem(KEY);if(s)done=JSON.parse(s)||[]}catch(e){}
+function save(){try{localStorage.setItem(KEY,JSON.stringify(done))}catch(e){}}
+function firstTodo(){for(var i=1;i<=30;i++){if(done.indexOf(i)<0)return i}return 30}
+sel=firstTodo();
+var $=function(i){return document.getElementById(i)};
+function renderGrid(){
+ var h="";
+ DAYS.forEach(function(x){
+  var c="d"+(x.rest?" rest":"")+(done.indexOf(x.d)>=0?" done":"")+(x.d===sel?" sel":"");
+  h+='<button class="'+c+'" data-d="'+x.d+'" aria-label="Dia '+x.d+(x.rest?', descanso':'')+(done.indexOf(x.d)>=0?', concluído':'')+'">'+(done.indexOf(x.d)>=0?"✓":x.d)+'</button>';
+ });
+ $("grid").innerHTML=h;
+ var n=done.length;
+ $("cnt").textContent=n+" de 30 dias";
+ $("fill").style.width=(n/30*100)+"%";
+ $("wk").textContent=n===30?"Desafio completo!":"Semana "+DAYS[sel-1].w+" de 4";
+}
+function renderPanel(){
+ var x=DAYS[sel-1],isDone=done.indexOf(sel)>=0,h="";
+ h+="<h2>Dia "+x.d+"</h2>";
+ if(x.rest){
+  h+='<p class="tag">Descanso ativo</p><ul class="ex"><li><div><strong>Caminhada leve</strong><small>30 a 40 minutos, em ritmo confortável.</small></div></li><li><div><strong>Alongamento</strong><small>5 a 10 minutos de costas, quadril e peito.</small></div></li></ul>';
+ }else{
+  var sets=SETS[x.w];
+  h+='<p class="tag">'+x.r.n+" · Semana "+x.w+" · "+sets+" séries por exercício · descanse 30 a 45 s entre séries</p>";
+  h+='<ul class="ex">';
+  x.r.l.forEach(function(k){
+   var e=EX[k],q=e.t==="s"?(e.b+(x.w-1)*10)+" s":(e.b+(x.w-1)*3)+" repetições";
+   h+='<li><div><strong>'+e.n+'</strong><small>'+e.h+'</small></div><span class="q">'+q+'</span></li>';
+  });
+  h+="</ul>";
+  if(x.d===30)h+='<p class="tag">Último dia. Termine forte e depois tire uma foto para comparar com o dia 1.</p>';
+ }
+ h+='<button class="btn'+(isDone?" undo":"")+'" id="mark">'+(isDone?"Desmarcar dia":"Marcar como feito")+"</button>";
+ $("panel").innerHTML=h;
+ $("mark").onclick=function(){
+  var i=done.indexOf(sel);
+  if(i>=0){done.splice(i,1)}else{done.push(sel);if(sel<30)sel=sel+1}
+  save();render();
+ };
+}
+function render(){renderGrid();renderPanel()}
+$("grid").onclick=function(e){
+ var b=e.target.closest("button");if(!b)return;
+ sel=+b.getAttribute("data-d");render();
+};
+$("reset").onclick=function(){
+ if(!confirm("Apagar todo o seu progresso e recomeçar?"))return;
+ done=[];save();sel=1;render();
+};
+render();
+</script>
+</body>
+</html>
